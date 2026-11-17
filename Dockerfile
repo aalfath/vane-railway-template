@@ -14,8 +14,8 @@ RUN chmod 755 /usr/local/bin/railway-start.sh && sed -i 's/\r$//' /usr/local/bin
 ENV SEARXNG_API_URL=http://127.0.0.1:8888 \
     PORT=8080
 
-# Config (incl. provider API keys), chat history (SQLite) and uploads all live here.
-VOLUME /home/vane/data
+# Config (incl. provider API keys), chat history (SQLite) and uploads all live in
+# /home/vane/data: mount a volume there (the Railway template does). Railway rejects VOLUME.
 EXPOSE 8080
 
 WORKDIR /home/vane
