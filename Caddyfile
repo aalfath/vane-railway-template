@@ -1,0 +1,24 @@
+{
+	admin off
+	auto_https off
+	persist_config off
+}
+
+:{$PORT} {
+	# Health check without login: proxies a static Vane asset, so it is 200 only once Vane is up.
+	handle /healthz {
+		rewrite * /icon-50.png
+		reverse_proxy 127.0.0.1:3000
+	}
+
+	# Everything else (UI and /api, which returns stored provider API keys) needs the login.
+	handle {
+		basic_auth {
+			{$VANE_USERNAME} {$VANE_PASSWORD_HASH}
+		}
+		reverse_proxy 127.0.0.1:3000 {
+			# Answers stream token by token; don't buffer them.
+			flush_interval -1
+		}
+	}
+}
